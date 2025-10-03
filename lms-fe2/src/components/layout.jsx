@@ -7,7 +7,7 @@ import Cards from "../pages/manager/home/cards";
 import { Outlet, useMatch } from "react-router-dom";
 
 export default function LayoutDashboard({isAdmin = true}) {
-  const isManagerPreviewPage = useMatch("/manager/course/:id/preview")
+  const isManagerPreviewPage = useMatch("/manager/courses/:id/preview")
   const isStudentPreviewPage = useMatch("/student/detail-course/:id")
 
   return (
