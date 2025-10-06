@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Proptypes from 'prop-types'
+import Proptypes from "prop-types";
 
 export default function StudentItem({
-    imageUrl = "/assets/images/photos/photo-3.png",
-    name = "Angga Risky Setiawan",
-    totalCourse = "183",
-    id = "1"
+  imageUrl = "/assets/images/photos/photo-3.png",
+  name = "Angga Risky Setiawan",
+  totalCourse = "183",
+  id = "1",
 }) {
   return (
     <>
@@ -55,8 +55,8 @@ export default function StudentItem({
 }
 
 StudentItem.propTypes = {
-    imageUrl: Proptypes.string,
-    name: Proptypes.string,
-    totalCourse: Proptypes.number,
-    id: Proptypes.string
-}
+  imageUrl: Proptypes.string,
+  name: Proptypes.string,
+  totalCourse: Proptypes.number,
+  id: Proptypes.string,
+};
