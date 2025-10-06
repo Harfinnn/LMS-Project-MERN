@@ -1,4 +1,4 @@
-import z from "zod";
+import z, { email, string } from "zod";
 
 export const exampleSchema = z.object({
     name: z.string().min(3)
@@ -26,4 +26,10 @@ export const mutateContentSchema = z.object({
     text: z.string().optional(),
     courseId: z.string().min(5)
 
+})
+
+export const mutateStudentSchema = z.object({
+    name: z.string().min(5),
+    email: z.string().email(),
+    password: z.string().min(5)
 })
