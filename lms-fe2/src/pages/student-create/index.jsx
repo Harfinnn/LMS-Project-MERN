@@ -1,24 +1,59 @@
-import { Link } from "react-router-dom";
+import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import React, { useRef, useState } from "react";
-import { createStudentSchema } from "../../utils/zodSchema";
+import { createStudentSchema, updateStudentSchema } from "../../utils/zodSchema";
+import { useMutation } from "@tanstack/react-query";
+import { createStudent, updateStudent } from "../../services/studentService";
 
 export default function ManageStudentCreatePage() {
+  const student = useLoaderData()
+  
   const {
     register,
     handleSubmit,
-    formState : { errors },
+    formState: { errors },
     setValue,
   } = useForm({
-    resolver: zodResolver(createStudentSchema),
+    resolver: zodResolver(student === undefined ? createStudentSchema : updateStudentSchema),
+    defaultValues: {
+      name: student?.name,
+      email: student?.email
+    }
   });
+
+  const navigate = useNavigate();
+
+  const mutateCreate = useMutation({
+    mutationFn: (data) => createStudent(data),
+  });
+
+  const mutateUpdate = useMutation({
+    mutationFn: (data) => updateStudent(data, student?._id)
+  })
 
   const [file, setFile] = useState(null);
   const inputFileRef = useRef(null);
 
-  const onSubmit = (values) => {
-    console.log(values);
+  const onSubmit = async (values) => {
+    try {
+      const formData = new FormData();
+
+      formData.append("name", values.name);
+      formData.append("email", values.email);
+      formData.append("password", values.password);
+      formData.append("avatar", file);
+
+      if (student === undefined) {
+        await mutateCreate.mutateAsync(formData)
+      } else {
+        await mutateUpdate.mutateAsync(formData)
+      }
+
+      navigate("/manager/students");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -26,7 +61,7 @@ export default function ManageStudentCreatePage() {
       <header className="flex items-center justify-between gap-[30px]">
         <div>
           <h1 className="font-extrabold text-[28px] leading-[42px]">
-            Add Student
+            {student === undefined ? 'Add' : 'Edit'} Student
           </h1>
           <p className="text-[#838C9D] mt-[1]">
             Create new future htmlFor company
@@ -69,7 +104,9 @@ export default function ManageStudentCreatePage() {
               <img
                 id="thumbnail-preview"
                 src={file !== null ? URL.createObjectURL(file) : ""}
-                className={`w-full h-full object-cover ${file !== null ? 'block' : 'hidden'}`}
+                className={`w-full h-full object-cover ${
+                  file !== null ? "block" : "hidden"
+                }`}
                 alt="thumbnail"
               />
             </div>
@@ -77,10 +114,12 @@ export default function ManageStudentCreatePage() {
               type="button"
               id="delete-preview"
               onClick={() => {
-                setFile(null)
-                setValue('photo', null)
+                setFile(null);
+                setValue("photo", null);
               }}
-              className={`w-12 h-12 rounded-full z-10 ${file !== null ? 'block' : 'hidden'}`}
+              className={`w-12 h-12 rounded-full z-10 ${
+                file !== null ? "block" : "hidden"
+              }`}
             >
               <img src="/assets/images/icons/delete.svg" alt="delete" />
             </button>
@@ -178,9 +217,10 @@ export default function ManageStudentCreatePage() {
           </button>
           <button
             type="submit"
+            disabled= {student === null ? mutateCreate.isLoading : mutateUpdate.isLoading}
             className="w-full rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap"
           >
-            Add Now
+            {student === undefined ? 'Add' : 'Edit'} Now
           </button>
         </div>
       </form>

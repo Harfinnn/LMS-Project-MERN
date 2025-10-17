@@ -4,9 +4,7 @@ import StudentItem from "./student-item";
 
 export default function ManageStudentPage() {
   const students = useLoaderData()
-
-  console.log(students)
-  
+    
   return (
     <>
       <header className="flex items-center justify-between gap-[30px]">
