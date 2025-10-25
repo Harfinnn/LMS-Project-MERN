@@ -4,7 +4,9 @@ export const getCourses = async () =>
   apiInstanceAuth.get("/courses").then((res) => res.data);
 
 export const getCourseDetail = async (id, isPreview = false) =>
-  apiInstanceAuth.get(`/courses/${id}${isPreview ? '?preview=true' : ''}`).then((res) => res.data);
+  apiInstanceAuth
+    .get(`/courses/${id}${isPreview ? "?preview=true" : ""}`)
+    .then((res) => res.data);
 
 export const getCategories = async () =>
   apiInstanceAuth.get("/categories").then((res) => res.data);
@@ -37,7 +39,16 @@ export const getDetailContent = async (id) =>
   apiInstanceAuth.get(`/courses/contents/${id}`).then((res) => res.data);
 
 export const updateContent = async (data, id) =>
-  apiInstanceAuth.put(`/courses/contents/${id}`, data).then((res) => res.data)
+  apiInstanceAuth.put(`/courses/contents/${id}`, data).then((res) => res.data);
 
 export const deleteDetailContent = async (id) =>
   apiInstanceAuth.delete(`/courses/contents/${id}`).then((res) => res.data);
+
+export const getStudentsCourse = async (id) =>
+  apiInstanceAuth.get(`/courses/students/${id}`).then((res) => res.data);
+
+export const addStudentsCourse = async (data, id) =>
+  apiInstanceAuth.post(`/courses/students/${id}`, data).then((res) => res.data);
+
+export const deleteStudentsCourse = async (data, id) =>
+  apiInstanceAuth.put(`/courses/students/${id}`, data).then((res) => res.data);
